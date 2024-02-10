@@ -2,7 +2,6 @@
 import { defineStore } from "pinia";
 import axiosClient from "@/axiosClient";
 
-
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     adminName: "",
@@ -12,7 +11,7 @@ export const useAuthStore = defineStore("auth", {
     token: "",
     loading: false,
     isAuthenticated: false,
-    errors: [],
+    errors: "",
   }),
 
   actions: {
@@ -39,8 +38,6 @@ export const useAuthStore = defineStore("auth", {
 
     async throttledLogin(form) {
       try {
-       
-
         this.loading = true;
         const response = await axiosClient.post("admin/login", form);
 
@@ -54,7 +51,7 @@ export const useAuthStore = defineStore("auth", {
         this.token = token;
         this.isAuthenticated = true;
         this.errors = [message];
-        console.log("Hi Here");
+
         window.localStorage.setItem(
           "admin",
           JSON.stringify({
@@ -67,7 +64,13 @@ export const useAuthStore = defineStore("auth", {
           })
         );
       } catch (error) {
-        // Handle error if necessary
+        if (error.response.data.success === false) {
+          if (typeof error.response.data.data !== "undefined") {
+            this.errors = error.response.data.data.email;
+          } else {
+            this.errors = error.response.data.message;
+          }
+        }
       } finally {
         this.loading = false;
       }

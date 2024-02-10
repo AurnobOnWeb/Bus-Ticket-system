@@ -3,17 +3,11 @@
     <div
       class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
     >
-      <a
-        href="#"
+      <button
         class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
       >
-        <img
-          class="w-8 h-8 mr-2"
-          src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-          alt="logo"
-        />
-        Flowbite
-      </a>
+        <!-- Flowbite -->
+      </button>
       <div
         class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
       >
@@ -24,6 +18,10 @@
             Sign in to your account
           </h1>
           <form class="space-y-4 md:space-y-6" @submit.prevent="handleLogin">
+            <template v-if="authStore.errors">
+              <span class="text-red-500">{{ authStore.errors }}</span>
+            </template>
+
             <div>
               <label
                 for="email"
@@ -60,17 +58,11 @@
             <button
               :disabled="authStore.loading"
               type="submit"
-              class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-50"
+              class="w-full text-white bg-primary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-primary font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-primary dark:focus:ring-blue-800 disabled:opacity-50"
             >
               Sign in
             </button>
-            {{ form.email }}
-            {{ form.password }}
-            {{ authStore.errors }}
-            {{ authStore.adminPermissions }}
-            {{ authStore.isAuthenticated }}
           </form>
-          <button class="btn" @click="getitem">fdf</button>
         </div>
       </div>
     </div>
@@ -90,10 +82,9 @@ let form = reactive({
 const handleLogin = async () => {
   await authStore.throttledLogin(form);
   if (authStore.isAuthenticated) {
-    router.push("/");
+    router.push({ name: "Dashboard" });
   }
 };
-
 import { onMounted } from "vue";
 
 onMounted(() => {

@@ -1,8 +1,9 @@
 // router/index.js
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import Login from "../views/Login.vue";
 import { useAuthStore } from "@/stores/auth";
+
+//Pages
+import Login from "../views/Login.vue";
 import Dashboard from "@/views/Dashboard.vue";
 
 const router = createRouter({
@@ -16,16 +17,7 @@ const router = createRouter({
     },
     {
       path: "/:pathMatch(.*)*",
-      redirect: { name: "home" }, // Redirect to the home page for unknown paths
-    },
-    {
-      path: "/",
-      name: "home",
-      component: HomeView,
-      meta: {
-        requiresAuth: true,
-        requiredPermissions: ["admin.view"],
-      },
+      redirect: { name: "Login" }, // Redirect to the home page for unknown paths
     },
     {
       path: "/dashboard",
@@ -38,6 +30,8 @@ const router = createRouter({
     },
   ],
 });
+
+//guard
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   authStore.initializeAuth(); // Initialize auth store
@@ -45,7 +39,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next({ name: "Login" });
   } else if (to.name === "Login" && authStore.isAuthenticated) {
-    next({ name: "home" });
+    next({ name: "Dashboard" });
   } else if (to.meta.requiredPermissions) {
     const requiredPermissions = to.meta.requiredPermissions;
 
@@ -59,8 +53,8 @@ router.beforeEach((to, from, next) => {
       if (from.name) {
         next({ name: from.name });
       } else {
-        // If no previous route (e.g., direct URL entry), redirect to the home page
-        next({ name: "home" });
+        // If no previous route (e.g., direct URL entry), redirect to the Dashboard page
+        next({ name: "Dashboard" });
       }
     } else {
       next();

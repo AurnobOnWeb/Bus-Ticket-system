@@ -27,12 +27,10 @@
       aria-orientation="vertical"
       aria-label="User menu"
     >
-      <RouterLink :to="('/')"
+      <RouterLink :to="'/'"
         ><UserButton label="Profile"></UserButton
       ></RouterLink>
-      <RouterLink :to="('/')"
-        ><UserButton label="Logout"></UserButton
-      ></RouterLink>
+      <Logout />
     </div>
   </transition>
 </template>
@@ -41,6 +39,7 @@
 import { ref } from "vue";
 import UserButton from "@/components/UserButton.vue";
 import { RouterLink } from "vue-router";
+import Logout from "@/components/Logout.vue";
 const open = ref(false);
 </script>
 

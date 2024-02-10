@@ -8,6 +8,8 @@ const pinia = createPinia();
 import App from "./App.vue";
 import router from "./router";
 
+//Progress Bar
+
 const app = createApp(App);
 
 app.use(pinia);
